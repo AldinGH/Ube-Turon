@@ -1,14 +1,3 @@
-"""
-UbeKeso Cart backend (standard library only).
-
-Handles accounts (customer / staff / admin), orders, the staff activity log,
-stock, loyalty cards and password reset. The browser app (main.py, running in
-PyScript) talks to it with JSON over /api/... and polls /api/state every few
-seconds, which is what makes orders show up live on every screen.
-
-Data is saved to data.json next to this file. Passwords are never stored
-as plain text (PBKDF2-SHA256 with a random salt per user).
-"""
 import datetime
 import hashlib
 import hmac
@@ -25,6 +14,7 @@ import urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.environ.get("UBEKESO_DATA") or os.path.join(HERE, "data.json")
+
 
 DEMO_SHOW_CODE = os.environ.get("UBEKESO_DEMO_CODES", "1") != "0"
 
@@ -54,7 +44,7 @@ PROMO_NAMES = ("promo.mp4", "promo.webm", "promo.mov")
 MEDIA_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,80}$")
 
 SESSION_DAYS = 30
-ONLINE_SECS = 15            
+ONLINE_SECS = 15
 RESET_MINUTES = 10
 MAX_PIECES = 60
 ACTIVE_STATUSES = ("new", "frying", "ready")
@@ -62,22 +52,27 @@ PESO = "\u20b1"
 
 LOCK = threading.RLock()
 DB = {}
-VERSION = [int(time.time())]    
-SEEN = {}                       
-RESET_CODES = {}               
-RESET_REQUESTS = {}             
-FAILS = {}                      
+VERSION = [int(time.time())]
+SEEN = {}
+RESET_CODES = {}
+RESET_REQUESTS = {}
+FAILS = {}
+
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
+
 
 def now():
     return time.time()
 
+
 def today_str():
     return datetime.date.today().isoformat()
 
+
 def peso(n):
     return "{}{:,}".format(PESO, int(n))
+
 
 def norm_phone(text):
     d = re.sub(r"[\s\-().]", "", str(text or ""))
@@ -95,7 +90,6 @@ def norm_phone(text):
 
 
 def parse_identifier(text):
-    """Return ('email', value) or ('phone', value), or (None, None) if invalid."""
     s = str(text or "").strip()
     if "@" in s:
         e = s.lower()
@@ -103,23 +97,28 @@ def parse_identifier(text):
     p = norm_phone(s)
     return ("phone", p) if p else (None, None)
 
+
 def clean_name(value):
     s = re.sub(r"\s+", " ", str(value or "")).strip()
     return s if 2 <= len(s) <= 60 else None
+
 
 def hash_pw(password, salt=None):
     salt = salt or secrets.token_bytes(16)
     digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 200_000)
     return salt.hex(), digest.hex()
 
+
 _DUMMY_SALT, _DUMMY_HASH = hash_pw("dummy-password")
 
+
 def check_pw(user, password):
-    if user is None:           
+    if user is None:
         hash_pw(password, bytes.fromhex(_DUMMY_SALT))
         return False
     _, digest = hash_pw(password, bytes.fromhex(user["salt"]))
     return hmac.compare_digest(digest, user["hash"])
+
 
 def password_problem(pw):
     if not isinstance(pw, str) or len(pw) < CONFIG["min_password"]:
@@ -128,8 +127,10 @@ def password_problem(pw):
         return "Password is too long."
     return None
 
+
 def contact_of(user):
     return user.get("email") or user.get("phone") or ""
+
 
 def fresh_db():
     return {
@@ -150,6 +151,7 @@ def fresh_db():
         "history": {},
         "activity": [],
     }
+
 
 def load():
     global DB
@@ -175,15 +177,18 @@ def load():
     save()
     return created
 
+
 def save():
     tmp = DATA_FILE + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(DB, f, indent=1)
     os.replace(tmp, DATA_FILE)
 
+
 def bump():
     VERSION[0] += 1
     save()
+
 
 def new_user(name, role, kind, value, password, must_change=False, created_by=None):
     uid = "u" + secrets.token_hex(4)
@@ -198,11 +203,13 @@ def new_user(name, role, kind, value, password, must_change=False, created_by=No
     DB["users"][uid] = user
     return user
 
+
 def find_user(kind, value):
     for u in DB["users"].values():
         if u.get(kind) == value:
             return u
     return None
+
 
 def log(user, text):
     DB["activity"].append({
@@ -216,11 +223,13 @@ def log(user, text):
     if len(DB["activity"]) > 500:
         del DB["activity"][:-500]
 
+
 def card_by_id(card_id):
     for c in DB["cards"]:
         if c["id"] == card_id:
             return c
     return None
+
 
 def create_card(name, customer_id=None):
     nums = []
@@ -234,21 +243,24 @@ def create_card(name, customer_id=None):
     DB["cards"].append(card)
     return card
 
+
 def add_stamp(card):
     if card and card["stamps"] < CONFIG["stamps_for_free"]:
         card["stamps"] += 1
         return True
     return False
 
+
 def deduct_stock(pieces):
     for item in DB["stock"]:
         item["left"] = max(0, item["left"] - pieces)
 
+
 def order_total(pieces, extra):
     return pieces * (CONFIG["price"] + (CONFIG["extra_cheese_price"] if extra else 0))
 
+
 def roll_day():
-    """At midnight, archive yesterday's pieces and start today at zero."""
     today = today_str()
     if DB["day"] != today:
         DB["history"][DB["day"]] = DB["sold_today"]
@@ -267,6 +279,7 @@ def week_hist():
         out.append(DB["history"].get(d.isoformat()) if d < today else None)
     return out
 
+
 def make_session(user):
     for tok in [t for t, s in DB["sessions"].items() if s["exp"] < now()]:
         del DB["sessions"][tok]
@@ -274,9 +287,11 @@ def make_session(user):
     DB["sessions"][token] = {"uid": user["id"], "exp": now() + SESSION_DAYS * 86400}
     return token
 
+
 def revoke_sessions(user_id, keep=None):
     for tok in [t for t, s in DB["sessions"].items() if s["uid"] == user_id and t != keep]:
         del DB["sessions"][tok]
+
 
 def get_user(headers):
     auth = headers.get("Authorization", "")
@@ -294,9 +309,11 @@ def get_user(headers):
         return None, None
     return user, token
 
+
 def online_ids():
     return sorted(uid for uid, u in DB["users"].items()
                   if u["role"] == "staff" and u["active"] and now() - SEEN.get(uid, 0) < ONLINE_SECS)
+
 
 def version_for(user):
     v = str(VERSION[0])
@@ -304,20 +321,23 @@ def version_for(user):
         v += "-" + ",".join(online_ids())
     return v
 
+
 def public_user(u):
     return {"id": u["id"], "name": u["name"], "role": u["role"], "email": u["email"],
             "phone": u["phone"], "must_change": bool(u["must_change"])}
 
+
 def promo():
-    """The promo video, if the owner has put one in the media folder. None means 'show the empty space'."""
     for name in PROMO_NAMES:
         path = os.path.join(MEDIA_DIR, name)
         if os.path.isfile(path) and os.path.getsize(path) > 0:
             return {"src": "/media/{}?v={}".format(name, int(os.path.getmtime(path))), "type": MEDIA_TYPES[os.path.splitext(name)[1]]}
     return None
 
+
 def api_public(user, body, token, query):
     return 200, {"promo": promo(), "config": CONFIG}
+
 
 def build_state(user):
     p = {"version": version_for(user), "config": CONFIG, "me": public_user(user), "promo": promo()}
@@ -344,6 +364,7 @@ def build_state(user):
         p["customers"] = len([u for u in DB["users"].values() if u["role"] == "customer"])
     return p
 
+
 def ok(user, **extra):
     data = {"ok": True, "state": build_state(user)}
     data.update(extra)
@@ -352,6 +373,7 @@ def ok(user, **extra):
 
 def err(status, message):
     return status, {"error": message}
+
 
 def throttled(key):
     f = FAILS.get(key)
@@ -364,6 +386,7 @@ def register_fail(key):
     if f["n"] >= 5:
         f["until"] = now() + 60
         f["n"] = 0
+
 
 def api_signup(user, body, token, query):
     name = clean_name(body.get("name"))
@@ -387,6 +410,7 @@ def api_signup(user, body, token, query):
     session = make_session(customer)
     bump()
     return ok(customer, token=session)
+
 
 def api_login(user, body, token, query):
     raw = str(body.get("identifier") or "").strip()
@@ -448,7 +472,6 @@ def api_password_change(user, body, token, query):
 
 
 def send_reset_code(user, kind, value, code):
-    """Hook for a real SMS / email service. For now it prints to the server terminal."""
     where = "email" if kind == "email" else "SMS"
     print("[password reset] {} to {} -> code {} (valid {} min)".format(where, value, code, RESET_MINUTES))
 
@@ -499,6 +522,7 @@ def api_forgot_reset(user, body, token, query):
         log(account, "reset their password")
     bump()
     return 200, {"ok": True}
+
 
 def to_int(value, low, high):
     try:
@@ -587,6 +611,7 @@ def api_order_action(user, body, token, query):
     bump()
     return ok(user, message=message)
 
+
 def api_sale(user, body, token, query):
     qty = to_int(body.get("qty"), 1, 200)
     if qty is None:
@@ -665,6 +690,7 @@ def api_stock(user, body, token, query):
     bump()
     return ok(user, message=message)
 
+
 def api_staff_create(user, body, token, query):
     name = clean_name(body.get("name"))
     kind, value = parse_identifier(body.get("identifier"))
@@ -683,6 +709,7 @@ def api_staff_create(user, body, token, query):
     bump()
     return ok(user, staff_id=staff["id"])
 
+
 def api_staff_active(user, body, token, query):
     target = DB["users"].get(body.get("id"))
     if target is None or target["role"] != "staff":
@@ -696,8 +723,8 @@ def api_staff_active(user, body, token, query):
     bump()
     return ok(user, message="{} {}.".format(target["name"], "enabled" if active else "disabled"))
 
+
 def api_activity_delete(user, body, token, query):
-    """Owner only: delete chosen activity log entries ({"ids": [...]}) or the whole log ({"all": true})."""
     before = len(DB["activity"])
     if body.get("all") is True:
         DB["activity"] = []
@@ -710,6 +737,7 @@ def api_activity_delete(user, body, token, query):
     removed = before - len(DB["activity"])
     bump()
     return ok(user, message="{} entr{} deleted.".format(removed, "y" if removed == 1 else "ies"))
+
 
 ALL = ("customer", "staff", "admin")
 STAFF = ("staff", "admin")
@@ -736,6 +764,8 @@ ROUTES = {
     ("POST", "/api/activity/delete"): (ADMIN, api_activity_delete),
 }
 
+
+STATIC = {
     "/": "index.html", "/index.html": "index.html", "/style.css": "style.css",
     "/extra.css": "extra.css", "/main.py": "main.py", "/pyscript.toml": "pyscript.toml",
 }
@@ -751,7 +781,6 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
     def _serve_media(self, name):
-        """Serve one file from media/ (with Range support so videos can start fast and be skipped through)."""
         ext = os.path.splitext(name)[1].lower()
         full = os.path.join(MEDIA_DIR, name)
         if not (MEDIA_NAME_RE.match(name) and ext in MEDIA_TYPES and os.path.isfile(full)):
@@ -860,9 +889,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_HEAD(self):
         self.send_error(405)
 
+
 class Server(socketserver.ThreadingMixIn, http.server.HTTPServer):
     daemon_threads = True
     allow_reuse_address = True
+
 
 def make_server(host, start_port):
     for port in range(start_port, start_port + 20):
