@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>UbeKeso Cart</title>
+  <meta name="theme-color" content="#5B2D8E">
+  <link rel="icon" type="image/png" href="/media/logo-icon.png">
+  <link rel="apple-touch-icon" href="/media/logo-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./extra.css">
+
+  <!-- PyScript (runs Python in the browser) -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2024.11.1/core.css">
+  <script type="module" src="https://pyscript.net/releases/2024.11.1/core.js"></script>
+</head>
+<body>
+  <!-- The whole app lives inside this phone-sized frame.
+       main.py draws every screen into #screen, #tabbar and #modal-root. -->
+  <main id="phone" class="no-tabs">
+    <div id="screen">
+      <div class="loading">
+        <img class="brand-logo" src="/media/logo.jpg" alt="Ube-Kesoturon" width="150" height="150">
+        <p>Starting UbeKeso Cart…</p>
+        <small>Loading Python in your browser. This takes a few seconds the first time.</small>
+      </div>
+    </div>
+    <nav id="tabbar" aria-label="Main tabs"></nav>
+    <div id="modal-root"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </main>
+
+  <script type="py" src="./main.py" config="./pyscript.toml"></script>
+</body>
+</html>

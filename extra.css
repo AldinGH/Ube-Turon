@@ -1,0 +1,196 @@
+/* UbeKeso Cart - extra styles for accounts, customer screens, staff and admin. */
+
+/* Tab badges (new orders / ready orders) */
+.tab { position: relative; }
+.tab .badge {
+  position: absolute; top: 4px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; font-weight: 700;
+  display: grid; place-items: center;
+}
+
+/* Forms */
+.field-error.center { text-align: center; margin-bottom: 8px; }
+.signin .btn + .btn { margin-top: 10px; }
+.signin .seg { margin-bottom: 14px; }
+.small-note { font-size: 12.5px; color: var(--muted); margin: -4px 0 12px; }
+.sheet .note-green { margin-bottom: 14px; }
+
+/* Customer: order progress */
+.steps { display: flex; gap: 6px; }
+.steps .s {
+  flex: 1; text-align: center; font-size: 12px; font-weight: 700; padding: 6px 0; border-radius: 8px;
+  background: var(--tint); color: var(--muted);
+}
+.steps .s.on { background: var(--ube); color: #fff; }
+.status-text { font-size: 14px; }
+.order .total { font-weight: 700; }
+.order .sub-meta { font-size: 12.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.src { font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--tint); color: var(--ube); }
+.pill.cancelled { background: #ECE8F2; color: var(--muted); }
+.order.cancelled { opacity: .7; }
+.btn-danger-outline { background: transparent; border-color: var(--red); color: var(--red); }
+
+/* Account */
+.who-card { display: grid; gap: 6px; }
+.who-card .nm { font-family: var(--heading); font-weight: 800; font-size: 22px; }
+.role {
+  display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px;
+  background: var(--tint); color: var(--ube); margin-left: 6px; vertical-align: middle;
+}
+.role.admin { background: var(--cheese); color: var(--deep); }
+.role.customer { background: #ECE8F2; color: var(--muted); }
+
+/* Admin: needs attention + staff */
+.attn { display: grid; gap: 4px; }
+.attn .item { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 44px; }
+.attn .item span { font-size: 14px; }
+.attn .item.hot span { font-weight: 700; }
+.attn .item .btn-pill { min-height: 36px; padding: 0 14px; font-size: 14px; }
+.staff-card { display: grid; gap: 10px; }
+.staff-card .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.staff-card .top b { font-size: 16px; }
+.pill.online { background: var(--green-tint); color: var(--green); }
+.pill.offline { background: #ECE8F2; color: var(--muted); }
+.pill.disabled { background: var(--red-tint); color: var(--red); }
+.section-title { font-family: var(--heading); font-weight: 800; font-size: 18px; margin-top: 4px; }
+
+/* Activity log */
+.act { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.act:last-child { border-bottom: 0; }
+.act .who { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
+.act .who span { color: var(--muted); white-space: nowrap; }
+.act .what { font-size: 14px; margin-top: 2px; }
+
+.staff-card .meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 10px; }
+.act-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-top: 2px; }
+.act-row .what { margin-top: 0; flex: 1; }
+.act-del {
+  flex: none; min-height: 36px; padding: 0 12px; border-radius: 10px; border: 1.5px solid var(--red);
+  background: transparent; color: var(--red); font-size: 13px; font-weight: 700;
+}
+.act-clear { color: var(--red); }
+
+/* ---------- Brand logo (the Ube-Kesoturon picture) ---------- */
+.brand-logo {
+  display: block; align-self: center; width: 132px; height: 132px; border-radius: 30px; object-fit: cover;
+  background: #A589CC; margin-bottom: 14px; box-shadow: 0 10px 26px rgba(58, 27, 94, .25);
+}
+.loading .brand-logo { width: 150px; height: 150px; margin-bottom: 4px; }
+.signin { padding-top: 28px; }
+.signin h1, .signin .sub { text-align: center; }
+.center-link { display: block; margin: 6px auto 0; text-align: center; }
+.center-text { text-align: center; }
+
+/* ---------- Promo video space ---------- */
+.promo { padding: 12px; display: grid; gap: 10px; }
+.promo-title { font-family: var(--heading); font-weight: 800; font-size: 17px; padding: 2px 4px 0; }
+.promo-video {
+  display: block; width: 100%; max-height: 420px; border-radius: 12px; background: #1D1030; object-fit: contain;
+}
+.promo-empty {
+  display: grid; justify-items: center; gap: 6px; text-align: center; padding: 26px 16px; border-radius: 12px;
+  border: 2px dashed #CBB8E8; background: var(--tint); color: var(--muted); font-size: 13.5px;
+}
+.promo-empty b { color: var(--ink); font-family: var(--heading); font-size: 17px; }
+.promo-play {
+  width: 56px; height: 56px; border-radius: 50%; background: var(--ube); display: grid; place-items: center;
+  margin-bottom: 4px;
+}
+.promo-play svg { width: 26px; height: 26px; fill: var(--cheese); margin-left: 3px; }
+.promo-tip { margin-top: 6px; font-size: 12.5px; color: var(--deep); background: var(--cheese-tint); padding: 8px 10px; border-radius: 10px; }
+
+/* ---------- About us & FAQs ---------- */
+.about-hero { display: grid; justify-items: center; text-align: center; gap: 2px; padding-top: 4px; }
+.about-hero .brand-logo { width: 168px; height: 168px; border-radius: 36px; margin-bottom: 10px; }
+.about-hero h1 { font-family: var(--heading); font-weight: 800; font-size: 30px; letter-spacing: -.02em; }
+.about-text { font-size: 14.5px; line-height: 1.55; margin-top: 6px; }
+.about-points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.about-points .card { padding: 12px 8px; display: grid; gap: 2px; text-align: center; }
+.about-points b { font-family: var(--heading); color: var(--ube); font-size: 16px; }
+.about-points span { font-size: 12px; color: var(--muted); }
+.faq-list { padding: 4px 16px; }
+.faq { border-bottom: 1px solid var(--line); }
+.faq:last-child { border-bottom: 0; }
+.faq summary {
+  list-style: none; cursor: pointer; min-height: 48px; display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; font-weight: 700; font-size: 14.5px;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 22px; font-weight: 600; color: var(--ube); flex: none; }
+.faq[open] summary::after { content: "\2212"; }
+.faq p { font-size: 14px; line-height: 1.55; color: var(--muted); padding: 0 0 14px; }
+
+/* =====================================================================
+   DESKTOP LAYOUT (screens 900px wide and up)
+   Phones and small tablets keep the phone-style layout above.
+   On a computer the tab bar becomes a left sidebar, the content is centered
+   and wider, forms open as a dialog in the middle, and sign in is a smaller card.
+   ===================================================================== */
+@media (min-width: 900px) {
+  body { padding: 24px; }
+
+  #phone {
+    width: min(1100px, calc(100vw - 48px));
+    height: min(920px, calc(100dvh - 48px));
+    border-radius: 28px;
+  }
+  /* signed-out screens (sign in, create account, About) stay a compact card */
+  #phone.no-tabs { width: min(520px, calc(100vw - 48px)); }
+
+  /* left sidebar instead of the bottom tab bar */
+  #screen { inset: 0 0 0 232px; }
+  #phone.no-tabs #screen { inset: 0; }
+  #tabbar {
+    top: 0; right: auto; bottom: 0; left: 0; width: 232px; height: auto;
+    flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 4px;
+    padding: 20px 14px; border-top: 0; border-right: 1px solid var(--line); background: #fff;
+    overflow-y: auto;
+  }
+  #tabbar::before {
+    content: ""; display: block; width: 112px; height: 112px; margin: 0 auto 18px; border-radius: 26px;
+    background: #A589CC url("/media/logo-small.jpg") center / cover no-repeat;
+    box-shadow: 0 8px 20px rgba(58, 27, 94, .22); flex: none;
+  }
+  .tab {
+    flex: none; display: flex; align-items: center; justify-content: flex-start; gap: 12px;
+    min-height: 48px; padding: 0 12px; border-radius: 12px; font-size: 15px; text-align: left;
+  }
+  .tab:hover { background: var(--tint); }
+  .tab.active { background: var(--tint); }
+  .tab .badge { top: 50%; left: auto; right: 12px; transform: translateY(-50%); }
+
+  /* centered, wider content column (the scrollbar stays at the edge of the window) */
+  .head { padding: 28px max(28px, calc((100% - 820px) / 2)) 10px; }
+  .body { padding: 8px max(28px, calc((100% - 820px) / 2)) 28px; gap: 14px; }
+  .pinned { padding: 14px max(28px, calc((100% - 820px) / 2)) 18px; }
+  .head h1 { font-size: 36px; }
+
+  /* sign in / create account card */
+  .signin { width: 100%; max-width: 440px; align-self: center; padding: 36px 20px 24px; }
+
+  /* forms open as a dialog in the middle instead of a bottom sheet */
+  .modal { align-items: center; justify-content: center; }
+  .sheet { width: min(480px, calc(100% - 48px)); max-height: 86%; border-radius: 22px; padding: 22px 22px 26px; }
+
+  /* toast sits at the bottom of the content area */
+  #toast { left: 256px; right: 24px; bottom: 24px; max-width: 460px; margin: 0 auto; }
+  #phone.no-tabs #toast { left: 24px; }
+
+  .promo-video { max-height: 460px; }
+  .about-hero .brand-logo { width: 190px; height: 190px; }
+
+  /* small touches for mouse users */
+  .btn:not(:disabled):hover, .btn-pill:hover { filter: brightness(1.08); }
+  .chip:hover, .seg button:hover, .segmented button:hover { filter: brightness(.97); }
+  .link-btn:hover { text-decoration: underline; }
+  .faq summary:hover { color: var(--ube); }
+  .body::-webkit-scrollbar { width: 10px; }
+  .body::-webkit-scrollbar-thumb { background: #D5C7EA; border-radius: 6px; border: 2px solid var(--bg); }
+}
+
+@media (min-width: 1400px) {
+  #phone { width: min(1240px, calc(100vw - 48px)); }
+  #phone.no-tabs { width: min(560px, calc(100vw - 48px)); }
+  .head { padding-left: max(28px, calc((100% - 900px) / 2)); padding-right: max(28px, calc((100% - 900px) / 2)); }
+  .body, .pinned { padding-left: max(28px, calc((100% - 900px) / 2)); padding-right: max(28px, calc((100% - 900px) / 2)); }
+}

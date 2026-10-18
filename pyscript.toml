@@ -1,0 +1,4 @@
+# PyScript configuration for UbeKeso Cart.
+# The app only uses the Python standard library, so no extra packages are needed.
+name = "UbeKeso Cart"
+packages = []

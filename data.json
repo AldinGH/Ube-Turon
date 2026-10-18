@@ -1,0 +1,63 @@
+{
+ "users": {
+  "ubc8641a6": {
+   "id": "ubc8641a6",
+   "name": "Owner",
+   "role": "admin",
+   "email": "admin@ubekeso.ph",
+   "phone": null,
+   "salt": "14464515e1e6945e772ffc562fe91648",
+   "hash": "17e33a7488f676e99fb130321fd62d0f190d145424d1db8471f65cf6ec3fc524",
+   "active": true,
+   "must_change": true,
+   "created": 1792286762.5355866,
+   "created_by": null,
+   "last_login": 1792287734.9499638,
+   "card_id": null
+  }
+ },
+ "sessions": {},
+ "orders": [],
+ "next_order_id": 1,
+ "cards": [],
+ "stock": [
+  {
+   "name": "Cheese",
+   "left": 0
+  },
+  {
+   "name": "Lumpia wrappers",
+   "left": 0
+  },
+  {
+   "name": "Malagkit rice",
+   "left": 0
+  },
+  {
+   "name": "Ube condensed milk",
+   "left": 0
+  }
+ ],
+ "day": "2026-10-18",
+ "sold_today": 0,
+ "extra_rev": 0,
+ "history": {},
+ "activity": [
+  {
+   "id": "0df11f4d",
+   "ts": 1792287734.9542496,
+   "actor_id": "ubc8641a6",
+   "actor": "Owner",
+   "role": "admin",
+   "text": "signed in"
+  },
+  {
+   "id": "a25c8421",
+   "ts": 1792288641.6195474,
+   "actor_id": "ubc8641a6",
+   "actor": "Owner",
+   "role": "admin",
+   "text": "signed out"
+  }
+ ]
+}
